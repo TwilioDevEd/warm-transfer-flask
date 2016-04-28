@@ -21,3 +21,13 @@ class RootTest(BaseTest):
         self.assertEquals(expected_dict, response_as_dict)
 
         token_mock.generate.assert_called_with('user1')
+
+    def test_call_agent(self):
+        views.call = call_mock = Mock()
+        call_mock.call_agent.return_value = 'CallSid'
+        response = self.client.post('/conference/user1/call')
+
+        self.assertEquals(200, response.status_code)
+        self.assertEquals('CallSid', response.data.decode('utf8'))
+
+        call_mock.call_agent.assert_called_with('user1')
