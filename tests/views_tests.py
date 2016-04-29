@@ -31,3 +31,13 @@ class RootTest(BaseTest):
         self.assertEquals('CallSid', response.data.decode('utf8'))
 
         call_mock.call_agent.assert_called_with('user1')
+
+    def test_wait_conference(self):
+        response = self.client.post('conference/wait')
+        self.assertEquals(200, response.status_code)
+
+        root = self.assertXmlDocument(response.data)
+        wait_message = 'Thank you for calling. Please wait in line for a few seconds. An agent will be with you shortly.'
+        self.assertEquals([wait_message], root.xpath('./Say/text()'))
+        wait_music = 'http://com.twilio.music.classical.s3.amazonaws.com/BusyStrings.mp3'
+        self.assertEquals([wait_music], root.xpath('./Play/text()'))
