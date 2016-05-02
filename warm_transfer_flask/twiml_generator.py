@@ -7,4 +7,4 @@ def generate_wait():
     wait_music = 'http://com.twilio.music.classical.s3.amazonaws.com/BusyStrings.mp3'
     twiml_response.say(wait_message)
     twiml_response.play(wait_music)
-    return twiml_response
+    return str(twiml_response)
