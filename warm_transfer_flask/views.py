@@ -32,8 +32,7 @@ def connect_client():
 
 
 def generate_token(agent_id):
-    return jsonify(token=token.generate(agent_id),
-                   agentId=agent_id)
+    return jsonify(token=token.generate(agent_id), agentId=agent_id)
 
 
 def call_agent(agent_id):
@@ -48,7 +47,7 @@ def wait():
 
 
 def connect_agent(conference_id, agent_id):
-    exit_on_end = 'agent2' in agent_id
+    exit_on_end = 'agent2' == agent_id
     return str(twiml_generator.generate_connect_conference(conference_id,
                                                            AGENT_WAIT_URL,
                                                            True,
