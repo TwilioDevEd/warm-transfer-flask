@@ -17,11 +17,11 @@ class CallTest(BaseTest):
         mocked_call.sid = 'CallSid'
 
         # when
-        sid = call.call_agent('agent1')
+        sid = call.call_agent('agent1', 'callback')
 
         # then
         call.TwilioRestClient.assert_called_with('sid321', 'auth123')
         rest_client_mock.calls.create.assert_called_with(to='agent1',
                                                          from_='+55',
-                                                         url='wait_callback')
+                                                         url='callback')
         self.assertEquals(sid, mocked_call.sid)
