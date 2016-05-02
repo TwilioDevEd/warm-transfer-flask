@@ -30,9 +30,9 @@ class RootTest(BaseTest):
         views.call = call_mock = Mock()
         call_mock.call_agent.return_value = 'CallSid'
         connect_agent_url = url_for('connect_agent', agent_id='agent2',
-                                    conference_id='conference123')
+                                    conference_id='conference123', _external=True)
 
-        response = self.client.post('/conference/agent2/call')
+        response = self.client.post('/conference/agent1/call')
 
         self.assertEquals(200, response.status_code)
         self.assertEquals('CallSid', response.data.decode('utf8'))
@@ -74,7 +74,7 @@ class RootTest(BaseTest):
         call_mock.call_agent.return_value = 'CallSid'
         twiml_mock.generate_connect_conference.return_value = 'Twiml'
         connect_agent_url = url_for('connect_agent', agent_id='agent1',
-                                    conference_id='call123')
+                                    conference_id='call123', _external=True)
 
         response = self.client.post('/conference/connect/client',
                                     data={'CallSid': 'call123'})
