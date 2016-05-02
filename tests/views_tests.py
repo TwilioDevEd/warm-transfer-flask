@@ -42,3 +42,23 @@ class RootTest(BaseTest):
         self.assertEquals(200, response.status_code)
         self.assertEquals('Twiml for waiting', response.data.decode('utf8'))
         twiml_mock.generate_wait.assert_called()
+
+    def test_connect_agent1(self):
+        views.twiml_generator = twiml_mock = Mock()
+        twiml_mock.generate_connect_conference.return_value = 'Twiml'
+
+        response = self.client.post('conference/ConferenceId/connect/agent1')
+
+        self.assertEquals(200, response.status_code)
+        self.assertEquals('Twiml', response.data.decode('utf8'))
+        twiml_mock.generate_connect_conference.assert_called_with('ConferenceId', '', True, False)
+
+    def test_connect_agent2(self):
+        views.twiml_generator = twiml_mock = Mock()
+        twiml_mock.generate_connect_conference.return_value = 'Twiml'
+
+        response = self.client.post('conference/ConferenceId/connect/agent2')
+
+        self.assertEquals(200, response.status_code)
+        self.assertEquals('Twiml', response.data.decode('utf8'))
+        twiml_mock.generate_connect_conference.assert_called_with('ConferenceId', '', True, True)

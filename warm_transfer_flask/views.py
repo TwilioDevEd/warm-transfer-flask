@@ -24,3 +24,10 @@ def call_agent(agent_id):
 @app.route('/conference/wait', methods=['POST'])
 def wait():
     return str(twiml_generator.generate_wait())
+
+
+@app.route('/conference/<conference_id>/connect/<agent_id>', methods=['POST'])
+def connect_agent(conference_id, agent_id):
+    exit_on_end = 'agent2' in agent_id
+    return str(twiml_generator.generate_connect_conference(conference_id, '', True,
+                                                           exit_on_end))
