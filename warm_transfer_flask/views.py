@@ -1,8 +1,9 @@
 from . import app
-from flask import render_template, jsonify, request
+from flask import render_template, jsonify, request, url_for
 from . import token
 from . import call
 from . import twiml_generator
+AGENT_WAIT_URL = 'http://twimlets.com/holdmusic?Bucket=com.twilio.music.classical'
 
 
 @app.route('/')
@@ -13,9 +14,12 @@ def root():
 @app.route('/conference/connect/client', methods=['POST'])
 def connect_client():
     conference_id = request.form['CallSid']
-    call.call_agent('agent1')
+    connect_agent_url = url_for('connect_agent', agent_id='agent1',
+                                conference_id=conference_id)
+    call.call_agent('agent1', connect_agent_url)
     return str(twiml_generator.generate_connect_conference(conference_id,
-                                                           '', False,
+                                                           url_for('wait'),
+                                                           False,
                                                            True))
 
 
@@ -39,5 +43,6 @@ def wait():
 def connect_agent(conference_id, agent_id):
     exit_on_end = 'agent2' in agent_id
     return str(twiml_generator.generate_connect_conference(conference_id,
-                                                           '', True,
+                                                           AGENT_WAIT_URL,
+                                                           True,
                                                            exit_on_end))
