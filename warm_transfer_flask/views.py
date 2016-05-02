@@ -1,5 +1,5 @@
 from . import app
-from flask import render_template, jsonify
+from flask import render_template, jsonify, request
 from . import token
 from . import call
 from . import twiml_generator
@@ -8,6 +8,15 @@ from . import twiml_generator
 @app.route('/')
 def root():
     return render_template('index.html')
+
+
+@app.route('/conference/connect/client', methods=['POST'])
+def connect_client():
+    conference_id = request.form['CallSid']
+    call.call_agent('agent1')
+    return str(twiml_generator.generate_connect_conference(conference_id,
+                                                           '', False,
+                                                           True))
 
 
 @app.route('/<agent_id>/token', methods=['POST'])
@@ -29,5 +38,6 @@ def wait():
 @app.route('/conference/<conference_id>/connect/<agent_id>', methods=['POST'])
 def connect_agent(conference_id, agent_id):
     exit_on_end = 'agent2' in agent_id
-    return str(twiml_generator.generate_connect_conference(conference_id, '', True,
+    return str(twiml_generator.generate_connect_conference(conference_id,
+                                                           '', True,
                                                            exit_on_end))

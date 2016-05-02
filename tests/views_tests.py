@@ -62,3 +62,17 @@ class RootTest(BaseTest):
         self.assertEquals(200, response.status_code)
         self.assertEquals('Twiml', response.data.decode('utf8'))
         twiml_mock.generate_connect_conference.assert_called_with('ConferenceId', '', True, True)
+
+    def test_connect_client(self):
+        views.twiml_generator = twiml_mock = Mock()
+        views.call = call_mock = Mock()
+        call_mock.call_agent.return_value = 'CallSid'
+        twiml_mock.generate_connect_conference.return_value = 'Twiml'
+
+        response = self.client.post('/conference/connect/client',
+                                    data={'CallSid': 'call123'})
+
+        self.assertEquals(200, response.status_code, response.data)
+        self.assertEquals('Twiml', response.data.decode('utf8'))
+        twiml_mock.generate_connect_conference.assert_called_with('call123', '', False, True)
+        call_mock.call_agent.assert_called_with('agent1')
