@@ -16,7 +16,7 @@ def test():
     import sys
     import unittest
     prepare_app(environment='test')
-    # upgrade_database() enable when there are models
+    upgrade_database()
     tests = unittest.TestLoader().discover('.', pattern="*_tests.py")
     test_result = unittest.TextTestRunner(verbosity=2).run(tests)
 

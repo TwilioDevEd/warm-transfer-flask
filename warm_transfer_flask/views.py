@@ -3,6 +3,7 @@ from flask import render_template, jsonify, request, url_for
 from . import token
 from . import call
 from . import twiml_generator
+from .models import ActiveCall
 AGENT_WAIT_URL = 'http://twimlets.com/holdmusic?Bucket=com.twilio.music.classical'
 
 
