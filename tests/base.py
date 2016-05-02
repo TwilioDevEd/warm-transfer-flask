@@ -1,4 +1,5 @@
 from xmlunittest import XmlTestCase
+from warm_transfer_flask.models import ActiveCall
 
 
 class BaseTest(XmlTestCase):
@@ -9,3 +10,4 @@ class BaseTest(XmlTestCase):
         self.app.config['WTF_CSRF_ENABLED'] = False
         self.db = db
         self.client = self.app.test_client()
+        ActiveCall.query.delete()
