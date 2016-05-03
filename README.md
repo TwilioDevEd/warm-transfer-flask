@@ -41,6 +41,8 @@ This project is built using the [Flask](http://flask.pocoo.org/) web framework.
  Run `source .env` to export the environment variables
 
 1. Run the migrations.
+    
+    Our app uses SQLite, so you probably will not need to install additional software.
 
     ```
     python manage.py db upgrade
