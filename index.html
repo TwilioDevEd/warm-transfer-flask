@@ -39,13 +39,13 @@ The client and the second agent stay on the call.</p>
 <li><a href="//flask.pocoo.org/docs/0.10/quickstart/">Getting Started with Flask</a></li>
 <li><a href="//www.twilio.com/docs/quickstart/python">Getting started with the Twilio Python library</a></li>
 </ul>
-</div><div data-title="Setting Up Voice Web Hook" data-file="warm_transfer_flask/views.py" data-highlight="11" class="step"><h2 id="setting-up-voice-web-hook">Setting Up Voice Web Hook</h2>
+</div><div data-title="Setting Up The Voice Web Hook" data-file="warm_transfer_flask/views.py" data-highlight="11" class="step"><h2 id="setting-up-the-voice-web-hook">Setting Up The Voice Web Hook</h2>
 <p>First let&#39;s configure the voice web-hook for the Twilio number that customers
 will dial when they want to talk to a support agent.
 <img src="//howtodocs.s3.amazonaws.com/twilio-number-config-all-med.gif" alt="Configure Voice"></p>
 <p>This should be the public-facing URL or your app in production.
 If you are using ngrok, it will look like this: <code>https://&lt;your-ngrok-id&gt;.ngrok.io/conference/connect/client</code></p>
-</div><div data-title="Connecting as a Support Agent" data-file="warm_transfer_flask/static/js/main.js" data-highlight="17-51" class="step"><h2 id="connecting-an-agent">Connecting an Agent</h2>
+</div><div data-title="Connecting an Agent" data-file="warm_transfer_flask/static/js/main.js" data-highlight="17-51" class="step"><h2 id="connecting-an-agent">Connecting an Agent</h2>
 <p>Here you can see all front-end code necessary to connect an agent using
 <a href="//www.twilio.com/webrtc">Twilio&#39;s Voice Web Client</a>.</p>
 <p>We essentially need three things to have a live web client:</p>
@@ -68,7 +68,7 @@ generation.</p>
 we need a <a href="//www.twilio.com/docs/client/capability-tokens">capability token</a>.</p>
 <p>To allow incoming connections through the web client an identifier must
 be provided when generating the token. For this tutorial we used fixed
-identifier strings like <code>agent1</code> and <code>agent2</code> but you can use any
+identifier strings like <code>agent1</code> and <code>agent2</code>, but you can use any
 generated string for your call center clients. These identifiers will be
 used to create outbound calls to the specified agent using the <a href="//www.twilio.com/docs/api/rest">Twilio
 REST API</a>.</p>
@@ -79,7 +79,7 @@ REST API</a>.</p>
 <li><a href="//twilio-python.readthedocs.io/en/latest/usage/token-generation.html">Generate Capability Tokens with twilio-python</a></li>
 <li><a href="//www.twilio.com/docs/api/rest/making-calls">Making Calls With Twilio REST API</a></li>
 </ul>
-</div><div data-title="Handling Incoming Calls From Clients" data-file="warm_transfer_flask/views.py" data-highlight="22-31" class="step"><h2 id="handling-incoming-calls">Handling Incoming Calls</h2>
+</div><div data-title="Handling Incoming Calls" data-file="warm_transfer_flask/views.py" data-highlight="22-31" class="step"><h2 id="handling-incoming-calls">Handling Incoming Calls</h2>
 <p>When a client makes a call to our Twilio number the application receives
 a POST request asking for instructions. We&#39;ll use <a href="//www.twilio.com/docs/api/twiml/">TwiML</a> to instruct the client
 to join a conference room and the Twilio REST API client to start a call with
@@ -92,7 +92,7 @@ to <a href="//www.twilio.com/docs/api/twiml/say">say</a> welcome to the user, an
 Take a look at the code
 <a href="//github.com/TwilioDevEd/warm-transfer-sinatra/blob/master/lib/twiml_generator.rb#L12-L17">here</a></p>
 <p>We use the client&#39;s <a href="//www.twilio.com/help/faq/voice/what-is-a-call-sid"><code>CallSid</code></a> as the conference identifier. Since all participants
-need this identifier to join the conference we&#39;ll need to store it in a database so that we can grab it when we dial the second agent in later.</p>
+need this identifier to join the conference, we&#39;ll need to store it in a database so that we can grab it when we dial the second agent in later.</p>
 </div><div data-title="Providing TwiML Instruction For The Client" data-file="warm_transfer_flask/twiml_generator.py" data-highlight="13-19" class="step"><h2 id="providing-twiml-instruction-for-the-client">Providing TwiML Instruction For The Client</h2>
 <p>Here we create a <code>TwiMLResponse</code> that will contain a
 <a href="//www.twilio.com/docs/api/twiml/dial"><code>Dial</code></a> verb with a
@@ -111,13 +111,13 @@ receives the following parameters:</p>
 </li>
 </ol>
 <p>Once the agent answers the call in the web client, a request is made to the
-callback URL instructing the agent&#39;s call to join the conference room where
+callback URL instructing this call to join the conference where
 the client is already waiting.</p>
 </div><div data-title="Dial Second Agent Into the Call" data-file="warm_transfer_flask/views.py" data-highlight="38-42" class="step"><h2 id="dial-second-agent-into-the-call">Dial Second Agent Into the Call</h2>
 <p>When the client and the first agent are both in the call we are ready to
 perform a <em>warm  transfer</em> to a second agent. The first agent makes a
 request passing its <code>identifier</code> to allow us to look for the <code>conference_id</code>
-needed to dial the second agent in. Since we already have a <code>call</code> module we can simply use the <code>call_agent</code> function to connect the second agent.</p>
+needed to dial the second agent in. Since we already have a <code>call</code> module we can simply use the <code>call_agent</code> function to connect the second agent in.</p>
 </div><div data-title="The First Agent Leaves the Call" data-file="warm_transfer_flask/twiml_generator.py" data-highlight="16-17" class="step"><h2 id="the-first-agent-leaves-the-call">The First Agent Leaves the Call</h2>
 <p>When the three participants have joined the same call, the first agent has
 served his purpose. Now he can drop the call, leaving agent two and the client
@@ -127,10 +127,10 @@ participants received when joining the call. Both, agent one and two, have
 <code>startConferenceOnEnter</code> set to <code>true</code>. This means the conference will start when
 any of them joins the call. For the client calling and for agent two, <code>endConferenceOnExit</code>
 is set to true. This causes the call to end when either of these two participants
-drop the call.</p>
+drops the call.</p>
 </div><div class="step"><h2 id="where-to-next-">Where to next?</h2>
 <p>That&#39;s it! We have just implemented warm transfers using Python and Flask.
-Now your clients won&#39;t get disconnect from support calls while they are been
+Now your clients won&#39;t get disconnect from support calls while they are being
 transferred to some else.</p>
 <p>If you&#39;re a Python developer working with Twilio, you might also enjoy these
 tutorials:</p>
