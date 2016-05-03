@@ -72,7 +72,7 @@ This project is built using the [Flask](http://flask.pocoo.org/) web framework.
 
 1. Configure Twilio to call your webhooks.
 
-  You will also need to configure Twilio to call your application when calls are received on your `TWILIO_NUMBER`. The voice url should look something like this:
+  You will also need to configure Twilio to call your application when calls are received on your `TWILIO_NUMBER`. The voice URL should look something like this:
 
   ```
   http://<your-ngrok-id>.ngrok.io/conference/connect/client
@@ -90,7 +90,7 @@ That's it!
    browser tabs or windows.
 
    **Notes:**
-   * Remember to use your SSL enabled ngrok url `https`.
+   * Remember to use your SSL enabled ngrok URL `https`.
    Failing to do this won't allow you to receive incoming calls.
 
    * The application has been tested with [Chrome](https://www.google.com/chrome/)
@@ -99,7 +99,7 @@ That's it!
 1. In one window/tab click `Connect as Agent 1` and in the other one click
    `Connect as Agent 2`. Now both agents are waiting for an incoming call.
 
-1. Dial your [Twilio Number]() to start a call with `Agent 1`. Your `TWILIO_NUMBER`
+1. Dial your [Twilio Number](https://www.twilio.com/user/account/phone-numbers/incoming) to start a call with `Agent 1`. Your `TWILIO_NUMBER`
    environment variable was set when configuring the application to run.
 
 1. When `Agent 1` answers the call from the client, he/she can dial `Agent 2` in
