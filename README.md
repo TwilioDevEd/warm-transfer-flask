@@ -36,19 +36,19 @@ This project is built using the [Flask](http://flask.pocoo.org/) web framework.
 
  You can find your `TWILIO_ACCOUNT_SID` and `TWILIO_AUTH_TOKEN` in your
  [Twilio Account Settings](https://www.twilio.com/user/account/settings).
- You will also need a `TWILIO_NUMBER`, which you may find [here](https://www.twilio.com/user/account/phone-numbers/incoming).
+ You will also need a `TWILIO_NUMBER` that you may find [here](https://www.twilio.com/user/account/phone-numbers/incoming).
 
- Run `source .env` to export the environment variables
+ Run `source .env` to export the environment variables.
 
 1. Run the migrations.
-    
+
     Our app uses SQLite, so you probably will not need to install additional software.
 
     ```
     python manage.py db upgrade
     ```
 
-1. Expose your appliction to the wider internet using ngrok.
+1. Expose your application to the wider internet using ngrok.
 
     To actually forward incoming calls, your development server will need to be publicly accessible.
     [We recommend using ngrok to solve this problem](https://www.twilio.com/blog/2015/09/6-awesome-reasons-to-use-ngrok-when-testing-webhooks.html).
@@ -92,6 +92,7 @@ That's it!
    **Notes:**
    * Remember to use your SSL enabled ngrok url `https`.
    Failing to do this won't allow you to receive incoming calls.
+
    * The application has been tested with [Chrome](https://www.google.com/chrome/)
    and [Firefox](https://firefox.com). Safari is not supported at the moment.
 
