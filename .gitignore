@@ -9,6 +9,9 @@ __pycache__/
 # VIM swaps
 *.swp
 
+# virtualenv
+venv/
+
 # SQLite
 *.sqlite
 
