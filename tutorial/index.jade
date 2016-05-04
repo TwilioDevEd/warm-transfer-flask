@@ -61,6 +61,7 @@
       [Twilio's Voice Web Client](//www.twilio.com/webrtc).
 
       We essentially need three things to have a live web client:
+
       * A capability token (provided by our Flask app)
       * A unique identifier (string) for each agent
       * Event listeners to handle different Twilio-triggered events
@@ -77,10 +78,10 @@
       * [TwiML response with the twilio-python library](//www.twilio.com/docs/quickstart/python/twiml)
 
   .step(
-    data-title="Generate a Capability Token",
+    data-title="Generating a Capability Token",
     data-file='warm_transfer_flask/token.py')
     :markdown
-      ## Generate a Capability Token
+      ## Generating a Capability Token
 
       In order to connect the [Twilio Voice Web Client](//www.twilio.com/webrtc)
       we need a [capability token](//www.twilio.com/docs/client/capability-tokens).
@@ -113,15 +114,15 @@
       the first agent, so he can join the same conference.
 
       When providing instructions to the client, we also provide a
-      [`waitUrl`](//www.twilio.com/docs/api/twiml/conference#attributes-waitUrl),
-      which in our case is another end point of our application. This returns more TwiML
-      to [say](//www.twilio.com/docs/api/twiml/say) welcome to the user, and also
+      [`waitUrl`](//www.twilio.com/docs/api/twiml/conference#attributes-waitUrl).
+      This URL is another end point of our application. This returns more TwiML
+      to [say](//www.twilio.com/docs/api/twiml/say) welcome to the user and also
       [play](//www.twilio.com/docs/api/twiml/play) some music while on hold.
       Take a look at the code
       [here](//github.com/TwilioDevEd/warm-transfer-sinatra/blob/master/lib/twiml_generator.rb#L12-L17)
 
       We use the client's [`CallSid`](//www.twilio.com/help/faq/voice/what-is-a-call-sid) as the conference identifier. Since all participants
-      need this identifier to join the conference, we'll need to store it in a database so that we can grab it when we dial the second agent in later.
+      need this identifier to join the conference, we'll need to store it in a database so that we can grab it when we dial the second agent in.
 
   .step(
     data-title="Providing TwiML Instruction For The Client",
@@ -156,16 +157,17 @@
       the client is already waiting.
 
   .step(
-    data-title='Dial Second Agent Into the Call',
+    data-title='Dialing the Second Agent Into the Call',
     data-file='warm_transfer_flask/views.py',
     data-highlight='38-42')
     :markdown
-      ## Dial Second Agent Into the Call
+      ## Dialing the Second Agent Into the Call
 
       When the client and the first agent are both in the call we are ready to
       perform a *warm  transfer* to a second agent. The first agent makes a
       request passing its `identifier` to allow us to look for the `conference_id`
-      needed to dial the second agent in. Since we already have a `call` module we can simply use the `call_agent` function to connect the second agent in.
+      needed to dial the second agent in. Since we already have a `call` module we
+      can simply use the `call_agent` function to connect the second agent in.
 
   .step(
     data-title='The First Agent Leaves the Call',
@@ -198,7 +200,7 @@
 
       [**Automated-Survey-Flask**](//www.twilio.com/docs/tutorials/walkthrough/automated-survey/python/flask)
 
-      Instantly collect structured data from your users with a survey conducted over a voice call or SMS text messages.
+      Instantly collect structured data from your users with a survey conducted over a call or SMS text messages.
 
       [**Browser-Calls**](//www.twilio.com/docs/tutorials/walkthrough/browser-calls/python/flask)
 
