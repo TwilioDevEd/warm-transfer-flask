@@ -90,7 +90,7 @@ This URL is another end point of our application. This returns more TwiML
 to <a href="//www.twilio.com/docs/api/twiml/say">say</a> welcome to the user and also
 <a href="//www.twilio.com/docs/api/twiml/play">play</a> some music while on hold.
 Take a look at the code
-<a href="//github.com/TwilioDevEd/warm-transfer-sinatra/blob/master/lib/twiml_generator.rb#L12-L17">here</a></p>
+<a href="//github.com/TwilioDevEd/warm-transfer-flask/blob/master/warm_transfer_flask/twiml_generator.py#L4-10">here</a></p>
 <p>We use the client&#39;s <a href="//www.twilio.com/help/faq/voice/what-is-a-call-sid"><code>CallSid</code></a> as the conference identifier. Since all participants
 need this identifier to join the conference, we&#39;ll need to store it in a database so that we can grab it when we dial the second agent in.</p>
 </div><div data-title="Providing TwiML Instruction For The Client" data-file="warm_transfer_flask/twiml_generator.py" data-highlight="13-19" class="step"><h2 id="providing-twiml-instruction-for-the-client">Providing TwiML Instruction For The Client</h2>
