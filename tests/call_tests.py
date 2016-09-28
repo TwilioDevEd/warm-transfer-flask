@@ -21,7 +21,7 @@ class CallTest(BaseTest):
 
         # then
         call.Client.assert_called_with('sid321', 'auth123')
-        rest_client_mock.calls.create.assert_called_with(to='client:agent1',
-                                                         from_='+55',
+        rest_client_mock.calls.create.assert_called_with('client:agent1',
+                                                         '+55',
                                                          url='callback')
         self.assertEquals(sid, mocked_call.sid)
