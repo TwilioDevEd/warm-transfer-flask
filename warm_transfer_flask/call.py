@@ -7,6 +7,9 @@ def call_agent(agent_id, callback_url):
     auth_token = ENV['TWILIO_AUTH_TOKEN']
     my_number = ENV['TWILIO_NUMBER']
     client = Client(account_sid, auth_token)
-    call = client.calls.create(to='client:' + agent_id, from_=my_number,
-                               url=callback_url)
+
+    to = 'client:' + agent_id
+    from_ = my_number
+    call = client.calls.create(to, from_, url=callback_url)
+
     return call.sid
