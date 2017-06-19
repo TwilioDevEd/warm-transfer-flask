@@ -7,4 +7,11 @@ def generate(agent_id):
     auth_token = ENV['TWILIO_AUTH_TOKEN']
     capability = ClientCapabilityToken(account_sid, auth_token)
     capability.allow_client_incoming(agent_id)
-    return capability.to_jwt()
+    jwt = capability.to_jwt()
+
+    try:
+        jwt_str = jwt.decode('utf-8')
+    except Exception as e:
+        jwt_str = jwt
+
+    return jwt_str
