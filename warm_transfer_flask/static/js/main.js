@@ -1,107 +1,102 @@
-$(function() {
-  var currentAgentId;
-  var currentConnection;
-  var $callStatus = $('#call-status');
-  var $connectAgent1Button = $("#connect-agent1-button");
-  var $connectAgent2Button = $("#connect-agent2-button");
+(function () {
+    let currentAgentId;
+    const callStatus = document.getElementById('call-status');
+    const connectAgent1Button = document.getElementById("connect-agent1-button");
+    const connectAgent2Button = document.getElementById("connect-agent2-button");
 
-  var $answerCallButton = $("#answer-call-button");
-  var $hangupCallButton = $("#hangup-call-button");
-  var $dialAgent2Button = $("#dial-agent2-button");
+    const answerCallButton = document.getElementById("answer-call-button");
+    const hangupCallButton = document.getElementById("hangup-call-button");
+    const dialAgent2Button = document.getElementById("dial-agent2-button");
 
-  $connectAgent1Button.on('click', { agentId: 'agent1' }, agentClickHandler);
-  $connectAgent2Button.on('click', { agentId: 'agent2' }, agentClickHandler);
-  $hangupCallButton.on('click', hangUp);
-  $dialAgent2Button.on('click', dialAgent2);
+    const connectAgentRow = document.getElementById('connect-agent-row');
+    const connectedAgentRow = document.getElementById('connected-agent-row');
 
-  function fetchToken(agentId) {
-    $.post('/' + agentId + '/token', {}, function(data) {
-      currentAgentId = data.agentId;
-      connectClient(data.token)
-    }, 'json');
-  }
+    connectAgent1Button.onclick = () => { connectAgent('agent1') };
+    connectAgent2Button.onclick = () => { connectAgent('agent2') };
+    dialAgent2Button.onclick = dialAgent2;
 
-  function connectClient(token) {
-    Twilio.Device.setup(token);
-  }
+    const device = new Twilio.Device();
 
-  Twilio.Device.ready(function (device) {
-    updateCallStatus("Ready");
-    agentConnectedHandler(device._clientName);
-  });
-
-  // Callback for when Twilio Client receives a new incoming call
-  Twilio.Device.incoming(function(connection) {
-    currentConnection = connection;
-    updateCallStatus("Incoming support call");
-
-    // Set a callback to be executed when the connection is accepted
-    connection.accept(function() {
-      updateCallStatus("In call with customer");
-      $answerCallButton.prop('disabled', true);
-      $hangupCallButton.prop('disabled', false);
-      $dialAgent2Button.prop('disabled', false);
+    device.on('ready', function (device) {
+        callStatus.innerText = "Ready";
+        connectAgent1Button.classList.add('hidden');
+        connectAgent2Button.classList.add('hidden');
+        agentConnectedHandler(currentAgentId);
     });
 
-    // Set a callback on the answer button and enable it
-    $answerCallButton.click(function() {
-      connection.accept();
+    device.on('offline', function (device) {
+        callStatus.innerText = "Offline";
+        connectAgent1Button.disabled = false;
+        connectAgent2Button.disabled = false;
+        connectedAgentRow.classList.add('hidden');
+        connectAgentRow.classList.remove('hidden');
     });
-    $answerCallButton.prop('disabled', false);
-  });
 
-  /* Report any errors to the call status display */
-  Twilio.Device.error(function (error) {
-    updateCallStatus("ERROR: " + error.message);
-    disableConnectButtons(false);
-  });
+    // Callback for when Twilio Client receives a new incoming call
+    device.on('incoming', function (connection) {
+        callStatus.innerText = "Incoming support call";
 
-  // Callback for when the call finalizes
-  Twilio.Device.disconnect(function(connection) {
-    callEndedHandler(connection.device._clientName);
-  });
+        // Set a callback to be executed when the connection is accepted
+        connection.accept(function () {
+            callStatus.innerText = "In call with customer";
+            answerCallButton.disabled = true;
+            hangupCallButton.disabled = false;
+            dialAgent2Button.disabled = false;
+        });
 
-  function dialAgent2() {
-    $.post('/conference/' + currentAgentId + '/call')
-  }
+        // Set a callback on the answer button and enable it
+        answerCallButton.onclick = () => {
+            connection.accept();
+        };
+        answerCallButton.disabled = false;
+    });
 
-  /* End a call */
-  function hangUp() {
-    Twilio.Device.disconnectAll();
-  }
+    /* Report any errors to the call status display */
+    device.on('error', function (error) {
+        callStatus.innerText = `ERROR: ${error.message}`;
+        connectAgent1Button.disabled = false;
+        connectAgent2Button.disabled = false;
+    });
 
-  function agentClickHandler(e) {
-    var agentId = e.data.agentId;
-    disableConnectButtons(true);
-    fetchToken(agentId);
-  }
+    // Callback for when the call finalizes
+    device.on('disconnect', function (connection) {
+        dialAgent2Button.disabled = true;
+        hangupCallButton.disabled = true;
+        answerCallButton.disabled = true;
+        callStatus.innerText = `Connected as: ${currentAgentId}`;
+    });
 
-  function agentConnectedHandler(agentId) {
-    $('#connect-agent-row').addClass('hidden');
-    $('#connected-agent-row').removeClass('hidden');
-    updateCallStatus("Connected as: " + agentId);
+    hangupCallButton.onclick = () => { device.disconnectAll() };
 
-    if (agentId === 'agent1') {
-      $dialAgent2Button.removeClass('hidden').prop('disabled', true);
+    function connectAgent(agentId) {
+        connectAgent1Button.disabled = true;
+        connectAgent2Button.disabled = true;
+        currentAgentId = agentId;
+        fetch('/' + agentId + '/token', { method: 'POST' })
+            .then(response => response.json())
+            .then(function (data) {
+                device.setup(data.token);
+            })
+            .catch(error => {
+                callStatus.innerText = `ERROR: ${error.message}`;
+            });
     }
-    else {
-      $dialAgent2Button.addClass('hidden')
+
+    function dialAgent2() {
+        fetch('/conference/' + currentAgentId + '/call', { method: 'POST' });
     }
-  }
 
-  function callEndedHandler(agentId) {
-    $dialAgent2Button.prop('disabled', true);
-    $hangupCallButton.prop('disabled', true);
-    $answerCallButton.prop('disabled', true)
-    updateCallStatus("Connected as: " + agentId);
-  }
+    function agentConnectedHandler(agentId) {
+        connectAgentRow.classList.add('hidden');
+        connectedAgentRow.classList.remove('hidden');
+        callStatus.innerText = `Connected as: ${agentId}`;
 
-  function disableConnectButtons(disable) {
-    $connectAgent1Button.prop('disabled', disable);
-    $connectAgent2Button.prop('disabled', disable);
-  }
+        if (agentId === 'agent1') {
+            dialAgent2Button.classList.remove('hidden');
+            dialAgent2Button.attributes.disabled = true;
+        } else {
+            dialAgent2Button.classList.add('hidden');
+        }
+    }
 
-  function updateCallStatus(status) {
-    $callStatus.text(status);
-  }
-});
+})();

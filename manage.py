@@ -1,5 +1,5 @@
-from flask.ext.script import Manager
-from flask.ext.migrate import Migrate, MigrateCommand
+from flask_script import Manager
+from flask_migrate import Migrate, MigrateCommand
 from flask_migrate import upgrade as upgrade_database
 from warm_transfer_flask import app, db, prepare_app
 
@@ -15,7 +15,8 @@ def test():
     """Run the unit tests."""
     import sys
     import unittest
-    prepare_app(environment='test')
+
+    prepare_app(environment='testing')
     upgrade_database()
     tests = unittest.TestLoader().discover('.', pattern="*_tests.py")
     test_result = unittest.TextTestRunner(verbosity=2).run(tests)
@@ -27,6 +28,7 @@ def test():
 @manager.command
 def dbseed():
     pass
+
 
 if __name__ == "__main__":
     manager.run()

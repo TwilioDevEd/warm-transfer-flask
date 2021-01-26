@@ -1,13 +1,15 @@
-from .base import BaseTest
-from mock import Mock
 import json
+
+from unittest.mock import Mock
 from flask import url_for
+
 from warm_transfer_flask import views
 from warm_transfer_flask.models import ActiveCall
 
+from .base import BaseTestCase
 
-class RootTest(BaseTest):
 
+class RootTest(BaseTestCase):
     def test_renders_all_questions(self):
         response = self.client.get('/')
 
@@ -29,8 +31,12 @@ class RootTest(BaseTest):
         ActiveCall.create('agent1', 'conference123')
         views.call = call_mock = Mock()
         call_mock.call_agent.return_value = 'CallSid'
-        connect_agent_url = url_for('connect_agent', agent_id='agent2',
-                                    conference_id='conference123', _external=True)
+        connect_agent_url = url_for(
+            'connect_agent',
+            agent_id='agent2',
+            conference_id='conference123',
+            _external=True,
+        )
 
         response = self.client.post('/conference/agent1/call')
 
@@ -56,7 +62,9 @@ class RootTest(BaseTest):
 
         self.assertEquals(200, response.status_code)
         self.assertEquals('Twiml', response.data.decode('utf8'))
-        twiml_mock.generate_connect_conference.assert_called_with('ConferenceId', views.AGENT_WAIT_URL, True, False)
+        twiml_mock.generate_connect_conference.assert_called_with(
+            'ConferenceId', views.AGENT_WAIT_URL, True, False
+        )
 
     def test_connect_agent2(self):
         views.twiml_generator = twiml_mock = Mock()
@@ -66,22 +74,28 @@ class RootTest(BaseTest):
 
         self.assertEquals(200, response.status_code)
         self.assertEquals('Twiml', response.data.decode('utf8'))
-        twiml_mock.generate_connect_conference.assert_called_with('ConferenceId', views.AGENT_WAIT_URL, True, True)
+        twiml_mock.generate_connect_conference.assert_called_with(
+            'ConferenceId', views.AGENT_WAIT_URL, True, True
+        )
 
     def test_connect_client(self):
         views.twiml_generator = twiml_mock = Mock()
         views.call = call_mock = Mock()
         call_mock.call_agent.return_value = 'CallSid'
         twiml_mock.generate_connect_conference.return_value = 'Twiml'
-        connect_agent_url = url_for('connect_agent', agent_id='agent1',
-                                    conference_id='call123', _external=True)
+        connect_agent_url = url_for(
+            'connect_agent', agent_id='agent1', conference_id='call123', _external=True
+        )
 
-        response = self.client.post('/conference/connect/client',
-                                    data={'CallSid': 'call123'})
+        response = self.client.post(
+            '/conference/connect/client', data={'CallSid': 'call123'}
+        )
 
         self.assertEquals(200, response.status_code, response.data)
         self.assertEquals('Twiml', response.data.decode('utf8'))
-        twiml_mock.generate_connect_conference.assert_called_with('call123', url_for('wait'), False, True)
+        twiml_mock.generate_connect_conference.assert_called_with(
+            'call123', url_for('wait'), False, True
+        )
         call_mock.call_agent.assert_called_with('agent1', connect_agent_url)
 
     def test_connect_client_sets_active_call(self):
@@ -90,8 +104,7 @@ class RootTest(BaseTest):
         call_mock.call_agent.return_value = 'CallSid'
         twiml_mock.generate_connect_conference.return_value = 'Twiml'
 
-        self.client.post('/conference/connect/client',
-                         data={'CallSid': 'call123'})
+        self.client.post('/conference/connect/client', data={'CallSid': 'call123'})
 
         self.assertEquals(1, ActiveCall.query.count())
         self.assertEquals('agent1', ActiveCall.query.first().agent_id)

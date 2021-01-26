@@ -1,5 +1,5 @@
 # Warm Transfer: Transfer support calls from one agent to another using Flask
-[![Build Status](https://travis-ci.org/TwilioDevEd/warm-transfer-flask.svg?branch=master)](https://travis-ci.org/TwilioDevEd/warm-transfer-flask)
+![Flask](https://github.com/TwilioDevEd/warm-transfer-flask/workflows/Flask/badge.svg)
 
 ## Local development
 
@@ -7,78 +7,72 @@ This project is built using the [Flask](http://flask.pocoo.org/) web framework.
 
 1. Clone this repository and `cd` into it.
 
-1. Create a new virtual environment.
-    - If using vanilla [virtualenv](https://virtualenv.pypa.io/en/latest/):
+1. Create and activate a new python3 virtual environment.
 
-        ```
-        virtualenv venv
-        source venv/bin/activate
-        ```
-
-    - If using [virtualenvwrapper](https://virtualenvwrapper.readthedocs.org/en/latest/):
-
-        ```
-        mkvirtualenv automated-survey
-        ```
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
 
 1. Install the requirements.
 
-    ```
-    pip install -r requirements.txt
-    ```
-
+   ```bash
+   pip install -r requirements.txt
+   ```
 
 1. Copy the sample configuration file and edit it to match your configuration.
 
-  ```bash
-  $ cp .env.example .env
-  ```
+   ```bash
+   cp .env.example .env
+   ```
 
- You can find your `TWILIO_ACCOUNT_SID` and `TWILIO_AUTH_TOKEN` in your
- [Twilio Account Settings](https://www.twilio.com/user/account/settings).
- You will also need a `TWILIO_NUMBER` that you may find [here](https://www.twilio.com/user/account/phone-numbers/incoming).
-
- Run `source .env` to export the environment variables.
-
+   Twilio API credentials can be found [here](https://www.twilio.com/console) 
+   and find you can create a REST API Key [here](https://www.twilio.com/console/project/api-keys).
+   If using the twilio CLI you can run:
+   
+   ```bash
+   twilio api:core:keys:create --friendly-name=worm-transfer -o json
+   ```
+   
 1. Run the migrations.
 
-    Our app uses SQLite, so you probably will not need to install additional software.
-
-    ```
-    python manage.py db upgrade
-    ```
+   Our app uses SQLite, so you probably will not need to install additional software.
+   
+   ```bash
+   python manage.py db upgrade
+   ```
 
 1. Expose your application to the wider internet using ngrok.
 
-    To actually forward incoming calls, your development server will need to be publicly accessible.
-    [We recommend using ngrok to solve this problem](https://www.twilio.com/blog/2015/09/6-awesome-reasons-to-use-ngrok-when-testing-webhooks.html).
+   To actually forward incoming calls, your development server will need to be publicly accessible.
+   [We recommend using ngrok to solve this problem](https://www.twilio.com/blog/2015/09/6-awesome-reasons-to-use-ngrok-when-testing-webhooks.html).
 
 
    ```bash
-   $ ngrok http 5000
+   ngrok http 5000
    ```
 
-    Once you have started ngrok, the public accessible URL will look like this:
-
-    ```
-    https://<your-ngrok-id>.ngrok.io/
-    ```
+   Once you have started ngrok, the public accessible URL will look like this:
+   
+   ```
+   https://<your-ngrok-id>.ngrok.io/
+   ```
 
 1. Start the development server.
 
-    ```
-    python manage.py runserver
-    ```
+   ```bash
+   python manage.py runserver
+   ```
 
 1. Configure Twilio to call your webhooks.
 
-  You will also need to configure Twilio to call your application when calls are received on your `TWILIO_NUMBER`. The voice URL should look something like this:
+   You will also need to configure Twilio to call your application when calls are received on your `TWILIO_NUMBER`. The voice URL should look something like this:
+   
+   ```
+   http://<your-ngrok-id>.ngrok.io/conference/connect/client
+   ```
 
-  ```
-  http://<your-ngrok-id>.ngrok.io/conference/connect/client
-  ```
-
-  ![Configure Voice](http://howtodocs.s3.amazonaws.com/twilio-number-config-all-med.gif)
+   ![Configure Voice](http://howtodocs.s3.amazonaws.com/twilio-number-config-all-med.gif)
 
 
 That's it!
@@ -112,5 +106,5 @@ That's it!
 ## Meta
 
 * No warranty expressed or implied. Software is as is. Diggity.
-* [MIT License](http://www.opensource.org/licenses/mit-license.html)
+* [MIT License](LICENSE)
 * Lovingly crafted by Twilio Developer Education.

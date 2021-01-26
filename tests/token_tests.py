@@ -1,22 +1,21 @@
-from .base import BaseTest
-from mock import Mock
+from .base import BaseTestCase
+from unittest.mock import Mock
 from warm_transfer_flask import token
 
 
-class TokenTest(BaseTest):
-
+class TokenTest(BaseTestCase):
     def test_get_token(self):
         # given
-        capability_mock = Mock()
-        token.ClientCapabilityToken = Mock(return_value=capability_mock)
-        token.ENV = {'TWILIO_ACCOUNT_SID': 'sid321',
-                     'TWILIO_AUTH_TOKEN': 'auth123'}
-        capability_mock.to_jwt.return_value = 'token123'
+        access_token = Mock()
+        token.AccessToken = Mock(return_value=access_token)
+        access_token.to_jwt.return_value = b'token123'
 
         # when
         generated_token = token.generate('agent10')
         self.assertEquals('token123', generated_token)
 
         # then
-        token.ClientCapabilityToken.assert_called_with('sid321', 'auth123')
-        capability_mock.allow_client_incoming.assert_called_with('agent10')
+        token.AccessToken.assert_called_with(
+            'ACxxx', 'SKxxx', 'xxxxx', identity='agent10'
+        )
+        access_token.add_grant.assert_called_once()
