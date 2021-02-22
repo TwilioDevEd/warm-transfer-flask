@@ -3,7 +3,7 @@ from flask_migrate import Migrate, MigrateCommand
 from flask_migrate import upgrade as upgrade_database
 from warm_transfer_flask import app, db, prepare_app
 
-prepare_app(environment='development')
+prepare_app()
 migrate = Migrate(app, db)
 
 manager = Manager(app)

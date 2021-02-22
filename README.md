@@ -33,7 +33,13 @@ This project is built using the [Flask](http://flask.pocoo.org/) web framework.
    ```bash
    twilio api:core:keys:create --friendly-name=worm-transfer -o json
    ```
+
+1. Activate Flask development environment
    
+   ```bash
+   export FLASK_ENV=development
+   ```
+
 1. Run the migrations.
 
    Our app uses SQLite, so you probably will not need to install additional software.
