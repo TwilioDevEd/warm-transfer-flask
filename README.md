@@ -78,7 +78,7 @@ This project is built using the [Flask](http://flask.pocoo.org/) web framework.
    http://<your-ngrok-id>.ngrok.io/conference/connect/client
    ```
 
-   ![Configure Voice](http://howtodocs.s3.amazonaws.com/twilio-number-config-all-med.gif)
+   [Learn how to configure your Twilio phone number for voice calls](https://www.twilio.com/docs/voice/tutorials/warm-transfer-python-flask#set-up-the-voice-web-hook)
 
 
 That's it!
